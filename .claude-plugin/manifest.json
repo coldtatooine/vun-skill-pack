@@ -1,0 +1,32 @@
+{
+  "name": "vun-skill-pack",
+  "version": "1.0.0",
+  "description": "Security review skills: map attack surface, trace data flows, and document findings.",
+  "skills": [
+    {
+      "name": "scan",
+      "description": "Full security review of a path or codebase.",
+      "source": "./skills/scan.md"
+    },
+    {
+      "name": "recon",
+      "description": "Map the attack surface of a path without diving deep.",
+      "source": "./skills/recon.md"
+    },
+    {
+      "name": "trace",
+      "description": "Follow one piece of untrusted input to where it lands.",
+      "source": "./skills/trace.md"
+    },
+    {
+      "name": "vuln",
+      "description": "Check for a specific vulnerability class across the codebase.",
+      "source": "./skills/vuln.md"
+    },
+    {
+      "name": "finding",
+      "description": "Format the current finding into a structured report card.",
+      "source": "./skills/finding.md"
+    }
+  ]
+}
