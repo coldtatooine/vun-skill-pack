@@ -1,3 +1,7 @@
+---
+description: Follow one piece of untrusted input through the code from source to sink. Produces a hop-by-hop path with validation notes and a Vulnerable/Mitigated/Hypothesis verdict.
+---
+
 # /trace — Data Flow Trace
 
 Trace a specific input through the code to find where it lands.

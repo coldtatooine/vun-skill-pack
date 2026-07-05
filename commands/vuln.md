@@ -1,3 +1,7 @@
+---
+description: Scan for a specific vulnerability class across the codebase. Finds candidates, filters to reachable paths, verifies each, and reports confirmed issues in /finding format.
+---
+
 # /vuln — Check for a Specific Vulnerability Class
 
 Scan the codebase for one vulnerability class.

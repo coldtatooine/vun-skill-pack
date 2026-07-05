@@ -1,8 +1,14 @@
+---
+description: Format the current security finding into a structured report card with severity, CWE, root cause, evidence, impact, fix, and regression test. Pass --quick for a 3-line summary instead of the full card.
+---
+
 # /finding — Format a Security Finding
 
-Write up the current finding as a structured report card.
+Write up the current finding as a report card.
 
-If `$ARGUMENTS` is provided, use it as the finding title. Otherwise, derive it from context.
+If `$ARGUMENTS` is provided, use it as the finding title (strip flags first). Otherwise, derive it from context.
+
+**Mode:** if `$ARGUMENTS` contains `--quick`, use the Quick format. Otherwise use the Full format.
 
 ---
 
@@ -14,7 +20,19 @@ If `$ARGUMENTS` is provided, use it as the finding title. Otherwise, derive it f
 
 ---
 
-## Output format
+## Quick format (`--quick`)
+
+Three lines, for day-to-day triage speed:
+
+```
+[Severity] TITLE — file:line
+Risk: [what an attacker gets, one line]
+Fix: [shortest credible fix, one line]
+```
+
+---
+
+## Full format (default)
 
 **[TITLE]**
 

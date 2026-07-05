@@ -1,0 +1,13 @@
+{
+  "name": "vun-skill-pack",
+  "version": "1.1.0",
+  "description": "Defensive security for fast-shipping MVPs: pre-launch gate, secrets scan, attack-surface mapping, data-flow tracing, vuln scanning, guided fixes, launch triage, and stack-specific footgun guides (Next.js/Vercel, Supabase, Stripe, Node/Express).",
+  "author": {
+    "name": "coldtatooine",
+    "email": "sandro.box@gmail.com",
+    "url": "https://github.com/coldtatooine"
+  },
+  "repository": "https://github.com/coldtatooine/vun-skill-pack",
+  "license": "MIT",
+  "keywords": ["security", "appsec", "vulnerability", "code-review", "penetration-testing", "defensive", "mvp", "startup", "secrets", "nextjs", "supabase", "stripe"]
+}
