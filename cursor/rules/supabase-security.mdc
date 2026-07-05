@@ -1,0 +1,31 @@
+---
+description: Supabase security footguns — Row Level Security disabled or too permissive, service_role key exposed to the client, weak policies, public storage buckets, client-set privilege columns. Apply when the app uses Supabase (Postgres, Auth, Storage, Edge Functions).
+globs: "**/supabase/**,**/*supabase*,**/migrations/**/*.sql"
+alwaysApply: false
+---
+
+# Supabase Security Footguns
+
+The Supabase client runs in the browser and talks to the database directly, so **RLS is the security boundary** — not your application code.
+
+## 1. Row Level Security (RLS) — the whole ballgame
+- **RLS off = the table is fully readable/writable by anyone with the anon key** (which ships to the browser). Every API-exposed table MUST have RLS enabled.
+- Permissive policy is the real risk. Common broken policy: `USING (true)`, or one that checks authentication (`auth.role() = 'authenticated'`) but **not ownership** → any logged-in user reads every row (IDOR at the DB layer).
+- Correct ownership: `USING (auth.uid() = user_id)`. Verify both `USING` (read) **and** `WITH CHECK` (insert/update) — a missing `WITH CHECK` lets a user write rows they can't read.
+- Check policies for **all** operations: SELECT, INSERT, UPDATE, DELETE. A table with only a SELECT policy may still be freely deleted.
+
+## 2. The `service_role` key
+- `service_role` **bypasses RLS entirely** — a full-access admin key. Server-side only. Never in client code, never under a public env prefix, never in the browser bundle. Exposure = Critical, rotate immediately.
+- Use `anon` key in the browser; `service_role` only in trusted server contexts.
+
+## 3. Trusting client-set columns
+- The client can set any column not blocked by a policy. `role`, `is_admin`, `credits`, `tenant_id`, `price` must be protected by `WITH CHECK` or set server-side.
+- Privilege escalation: user updates their own `role` to `admin` because the UPDATE policy only checks `auth.uid() = user_id`.
+
+## 4. Storage buckets
+- Public buckets serve every object to anyone with the URL. Buckets holding private files must be **private** with storage RLS policies (separate from table RLS — check explicitly).
+
+## 5. Auth & other
+- Open signup + auto-confirm can let attackers create accounts freely.
+- `security definer` functions / RPC run with the definer's privileges — audit them; they can bypass RLS by design.
+- Keep the project JWT secret private — leaking it lets an attacker forge any user's token.

@@ -2,7 +2,7 @@
 
 A Claude Code plugin for **shipping MVPs fast without skipping security**. Built for local startups that need to get a product live quickly but can't afford a day-one breach.
 
-Ten slash commands, four stack-specific footgun guides, a security-reviewer agent, and an automated secret-leak gate for pre-commit and CI.
+Ten slash commands, four stack-specific footgun guides, a security-reviewer agent, and an automated secret-leak gate for pre-commit and CI. Ships for both **Claude Code** (marketplace plugin) and the **Cursor CLI** (`.cursor/` commands, rules, and hooks).
 
 ## Commands
 
@@ -52,6 +52,21 @@ git clone https://github.com/coldtatooine/vun-skill-pack.git
 ```
 
 Then add a local marketplace entry pointing to the cloned directory in Claude Code settings.
+
+### Cursor CLI
+
+The same pack ships in Cursor-native format under `cursor/` (commands, rules, hooks, `AGENTS.md`). Install into a project:
+
+```bash
+git clone https://github.com/coldtatooine/vun-skill-pack.git
+vun-skill-pack/cursor/install.sh /path/to/your/project
+```
+
+This copies commands into `.cursor/commands/`, stack rules into `.cursor/rules/`, and a `beforeReadFile` hook (`.cursor/hooks.json`) that blocks raw secret files from being read into model context. The Cursor CLI (`cursor-agent`) also reads `.cursor/rules` and `AGENTS.md` automatically. All 11 commands are available: `/preflight /secrets /scan /recon /trace /vuln /threat-model /triage /fix /finding /security-review`.
+
+**Notes:**
+- The hook needs `jq` installed (fails open without it).
+- Cursor hooks can only allow/deny a read, not inject context — so the "treat file content as untrusted data" guidance lives in an always-apply rule (`operating-rules.mdc`) instead of a hook.
 
 ---
 

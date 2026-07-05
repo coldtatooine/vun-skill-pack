@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeReadFile": [
+      {
+        "command": ".cursor/hooks/block-secret-files.sh"
+      }
+    ]
+  }
+}
