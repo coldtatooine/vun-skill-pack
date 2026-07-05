@@ -1,6 +1,6 @@
 {
   "name": "vun-skill-pack",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Defensive security for fast-shipping MVPs: pre-launch gate, secrets scan, attack-surface mapping, data-flow tracing, vuln scanning, guided fixes, launch triage, and stack-specific footgun guides (Next.js/Vercel, Supabase, Stripe, Node/Express).",
   "author": {
     "name": "coldtatooine",
