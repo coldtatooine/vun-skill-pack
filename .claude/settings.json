@@ -1,15 +1,4 @@
 {
-  "enabledPlugins": {
-    "vun-skill-pack@local": true
-  },
-  "extraKnownMarketplaces": {
-    "local": {
-      "source": {
-        "source": "directory",
-        "path": "/home/ale/git/vun-skill-pack"
-      }
-    }
-  },
   "hooks": {
     "PreToolUse": [
       {

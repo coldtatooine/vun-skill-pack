@@ -1,0 +1,28 @@
+name: Security Preflight
+
+# Coarse secret-leak gate for MVPs. Blocks a PR/push if an obvious secret
+# lands in the tree. This is the fast automated net — run /preflight and
+# /secrets in Claude Code for the real review before launch.
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  secrets-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run preflight secret scan
+        run: |
+          chmod +x scripts/preflight-check.sh
+          scripts/preflight-check.sh
+
+      - name: npm audit (high+ severity, non-blocking)
+        if: hashFiles('package-lock.json') != ''
+        run: npm audit --audit-level=high || true
+        continue-on-error: true

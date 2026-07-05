@@ -1,3 +1,7 @@
+---
+description: Full security review of a file, directory, or project. Maps attack surface, prioritizes leads, traces data flows, and produces a structured findings report.
+---
+
 # /scan — Full Security Review
 
 Run a full security review on `$ARGUMENTS` (a file, directory, or "." for the whole project).

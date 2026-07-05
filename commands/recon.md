@@ -1,3 +1,7 @@
+---
+description: Shallow attack surface map of a path. Breadth before depth — entry points, trust boundaries, sensitive sinks, and top targets. Use before /scan.
+---
+
 # /recon — Attack Surface Map
 
 Map the attack surface of `$ARGUMENTS` without going deep. Output only — no vulnerability analysis yet.
