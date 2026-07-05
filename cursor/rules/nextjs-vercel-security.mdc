@@ -1,0 +1,34 @@
+---
+description: Next.js & Vercel security footguns — client/server secret leakage via NEXT_PUBLIC, unauthenticated Server Actions and Route Handlers, middleware auth bypass, SSRF in server fetches. Apply when reviewing, building, or shipping a Next.js or Vercel app.
+globs: "**/*.tsx,**/*.jsx,next.config.*,middleware.ts,middleware.js,app/**,pages/**"
+alwaysApply: false
+---
+
+# Next.js & Vercel Security Footguns
+
+## 1. Secret leakage across the client/server boundary
+- **`NEXT_PUBLIC_*` is public** — inlined into the browser bundle. A real secret here is leaked. Only publishable/anon keys belong there.
+- **Server-only secrets must never be imported into a Client Component.** A module imported by a `"use client"` file (directly or transitively) ships to the browser. Check import chains, not just the file. Use `import 'server-only'` to fail the build if server code reaches the client.
+- Supabase `service_role`, Stripe `sk_*`, DB URLs → server only.
+
+## 2. Server Actions
+- **Every Server Action is a public POST endpoint.** No auth is applied automatically. Each must independently verify session AND authorization — do not assume it's only callable from your UI.
+- **Validate and authorize arguments.** Args are attacker-controlled. Re-check ownership/tenant on every ID passed in. Don't trust hidden form fields.
+
+## 3. Route Handlers (`route.ts`) & API routes
+- No built-in auth — each handler checks session + role itself.
+- IDOR: `/api/orders/[id]` must verify the caller owns the order, not just that they're logged in.
+- Validate body/params before use; don't reflect errors verbatim.
+
+## 4. Middleware auth bypass
+- `middleware.ts` `matcher` gaps let routes slip past auth. Verify the matcher covers every protected path (nested routes, `/api`, static).
+- Middleware is a filter, not the gate — re-enforce authz at the data layer. Never rely solely on a cookie's presence; verify the session/token signature.
+
+## 5. SSRF & untrusted fetches
+- Server-side `fetch()` with a user-supplied URL → SSRF into internal services / cloud metadata (`169.254.169.254`). Allowlist hosts.
+- Image Optimization `remotePatterns`/`domains` too broad can proxy arbitrary hosts.
+
+## 6. Other
+- **Open redirect**: `redirect(userInput)` / `?next=` without validating it's a same-origin relative path.
+- **`dangerouslySetInnerHTML`**: XSS if fed unsanitized input.
+- **Caching**: don't cache authenticated responses at the CDN/edge where another user could receive them.

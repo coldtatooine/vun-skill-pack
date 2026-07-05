@@ -1,0 +1,36 @@
+---
+description: Node.js & Express API security footguns — missing auth/authz middleware, IDOR, broken JWT verification, permissive CORS, SQL/NoSQL/command injection, missing rate limiting, mass assignment. Apply when reviewing, building, or shipping a Node/Express (or Fastify/Koa/Nest) backend.
+globs: "server.*,app.*,**/routes/**,**/controllers/**,**/middleware/**"
+alwaysApply: false
+---
+
+# Node.js & Express API Security Footguns
+
+## 1. Authentication & authorization
+- **Auth middleware must actually be applied** to every protected route. A route registered before/outside the `app.use(auth)` line, or a router mounted without it, is public. Trace middleware order.
+- **Authentication ≠ authorization.** A valid token proves *who*, not *whether they may*. Check role/ownership per route.
+- **IDOR is the #1 API hole**: `GET /users/:id` / `DELETE /orders/:id` must verify the token's user owns/may access that object — never look up by the path ID alone.
+
+## 2. JWT pitfalls
+- **Verify, don't decode**: `jwt.verify(token, secret)` — never `jwt.decode()` for auth (no signature check).
+- **Pin the algorithm**: `{ algorithms: ['HS256'] }`. Accepting `alg: none` or RS256↔HS256 confusion lets attackers forge tokens.
+- Strong secret key (not a default/committed value). Check `exp`. Have a revocation story.
+
+## 3. CORS
+- `cors({ origin: '*', credentials: true })` is invalid and dangerous — with credentials, reflect a strict origin allowlist, never `*`. Don't reflect the incoming `Origin` header unchecked.
+
+## 4. Injection
+- **SQL/NoSQL**: parameterized queries / prepared statements only; never string-concatenate input. For Mongo, guard operator injection (`{ $gt: '' }`) by validating/casting types.
+- **Command**: avoid `child_process.exec` with input; use `execFile`/`spawn` with an argument array and no shell.
+- **Path traversal**: normalize user-supplied filenames into `fs`/`path.join`, confine to a base dir, reject `..`.
+
+## 5. Missing defenses
+- **Rate limiting** on auth, password reset, expensive endpoints (`express-rate-limit`).
+- **Security headers**: `helmet()`. **Body size limit**: cap `express.json({ limit })`.
+- **Mass assignment**: `Object.assign(user, req.body)` lets a client set `isAdmin`/`role`. Allowlist writable fields.
+
+## 6. Other
+- Don't send stack traces / internal errors to clients in prod — central error handler, generic messages.
+- **Prototype pollution**: deep-merge of untrusted JSON with `__proto__`; validate/sanitize.
+- **SSRF**: allowlist hosts for server-side requests to user URLs; block internal ranges and cloud metadata.
+- Secrets from `process.env`, never committed; validate presence at boot.
