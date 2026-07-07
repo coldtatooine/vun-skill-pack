@@ -41,8 +41,8 @@ Loaded automatically when Claude detects the stack. Each is a checklist of the h
 ### From Marketplace
 
 ```
-/plugins install coldtatooine/vun-skill-pack
-/plugins enable vun-skill-pack
+/plugin marketplace add coldtatooine/vun-skill-pack
+/plugin install vun-skill-pack@coldtatooine
 ```
 
 ### From Source

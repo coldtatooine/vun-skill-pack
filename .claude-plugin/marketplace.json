@@ -1,0 +1,21 @@
+{
+  "name": "coldtatooine",
+  "owner": {
+    "name": "coldtatooine",
+    "email": "sandro.box@gmail.com",
+    "url": "https://github.com/coldtatooine"
+  },
+  "metadata": {
+    "description": "Security skill pack for shipping MVPs without shipping a breach.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "vun-skill-pack",
+      "source": "./",
+      "description": "Pre-launch security gate: secrets scan, attack-surface mapping, data-flow tracing, vuln scanning, guided fixes, launch triage, plus an appsec agent and footgun guides for Next.js/Vercel, Supabase, Stripe, Node/Express. Defensive review only.",
+      "category": "security",
+      "keywords": ["security", "appsec", "vulnerability", "code-review", "mvp", "secrets"]
+    }
+  ]
+}
